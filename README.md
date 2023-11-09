@@ -14,7 +14,12 @@ This script processes data from a SQLite database, creates embeddings for book t
 
 ## Installation
 
-Before running the script, make sure you have the required dependencies installed. You can install them using pip:
+Before running the script, make sure you have the required dependencies installed. You can install them using the requirements file.
+
+```bash
+pip install -r requirements.txt
+```
+or manually
 
 ```bash
 pip install sqlite3 transformers nltk numpy torch
