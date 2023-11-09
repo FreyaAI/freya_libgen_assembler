@@ -2,6 +2,7 @@ import sqlite3
 from abc import ABC, abstractmethod
 from typing import List, Tuple, Generator, Union, Any, Optional
 import re
+import argparse
 import inspect
 import time
 from transformers import AutoModel
@@ -368,17 +369,33 @@ def process_batch(batch, pending_elements, accumulated_data, batch_counter, outp
 
     return pending_elements, accumulated_data, batch_counter
 
-def main() -> None:
+
+def get_arguments():
+    parser = argparse.ArgumentParser(description="Process some configurations.")
+    parser.add_argument('--database_path', type=str, default="C:/Workzone/Datasets/LibgenDatabases/merged_fiction_nonfiction_sql3.db", help='Path to the database file')
+    parser.add_argument('--batch_size', type=int, default=128, help='Batch size for processing')
+    parser.add_argument('--description_chunk_size', type=int, default=4, help='Size of chunks for description')
+    parser.add_argument('--output_dir', type=str, default="./outputs/embedder", help='Output directory for results')
+    parser.add_argument('--max_model_batch_size', type=int, default=128, help='Maximum batch size for the model')
+    parser.add_argument('--save_every_n_batches', type=int, default=50, help='Save results every N batches')
+    parser.add_argument('--debug_limit', type=int, default=None, help='Limit the number of elements processed for debugging')
+
+    args = parser.parse_args()
+    return args
+
+
+def main(args) -> None:
     print("[Main] Starting...")
 
     ### Initialization ###
-    DATABASE_PATH = "C:\Workzone\Datasets\LibgenDatabases\merged_fiction_nonfiction_sql3.db"
-    BATCH_SIZE = 128
-    DESCRIPTION_CHUNK_SIZE = 4
-    OUTPUT_DIR = "./outputs/embedder"
-    MAX_MODEL_BATCH_SIZE = 128  # Max batch size for the model
-    SAVE_EVERY_N_BATCHES = 50  # Save results every N batches
-    DEBUG_LIMIT = None  # Limit the number of elements processed
+    DATABASE_PATH = args.database_path
+    BATCH_SIZE = args.batch_size
+    DESCRIPTION_CHUNK_SIZE = args.description_chunk_size
+    OUTPUT_DIR = args.output_dir
+    MAX_MODEL_BATCH_SIZE = args.max_model_batch_size
+    SAVE_EVERY_N_BATCHES = args.save_every_n_batches
+    DEBUG_LIMIT = args.debug_limit
+
 
     output_directory = create_timestamped_directory(OUTPUT_DIR)
     print(f"[Main] Saving results in directory: {output_directory}")
@@ -418,6 +435,9 @@ def main() -> None:
     print("[Main] Finished!")
 
 if __name__ == '__main__':
+
+    args = get_arguments()
+
     start_time = time.time()
-    main()  
+    main(args)  
     print(f"Time taken: {time.time() - start_time} seconds.")
