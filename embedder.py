@@ -378,7 +378,7 @@ def main() -> None:
     OUTPUT_DIR = "./outputs/embedder"
     MAX_MODEL_BATCH_SIZE = 128  # Max batch size for the model
     SAVE_EVERY_N_BATCHES = 50  # Save results every N batches
-    DEBUG_LIMIT = 30000  # Limit the number of elements processed
+    DEBUG_LIMIT = None  # Limit the number of elements processed
 
     output_directory = create_timestamped_directory(OUTPUT_DIR)
     print(f"[Main] Saving results in directory: {output_directory}")
